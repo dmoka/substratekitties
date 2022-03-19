@@ -254,6 +254,8 @@ mod tests {
         traits::{BlakeTwo256, IdentityLookup},
         testing::{Digest, DigestItem, Header}
     };
+    use crate::{RawEvent};
+
 
     impl_outer_origin! {
         pub enum Origin for KittiesTest {}
@@ -275,6 +277,7 @@ mod tests {
         type Event = ();
         type Log = DigestItem;
     }
+
     
     impl balances::Trait for KittiesTest {
         type Balance = u64;
@@ -323,11 +326,13 @@ mod tests {
             assert_eq!(Kitties::owned_kitty_count(account_without_kitty), 0);
 
             let hash = Kitties::kitty_by_index(0);
-            check_that_kitty_is_owned_by_account(hash, account)
+            check_that_kitty_is_owned_by_account(hash, account);
+
+            //TODO: assert events
+            //https://stackoverflow.com/questions/66722979/how-to-test-events-in-substrate-3-0-0?rq=1
 
         })
     }
-
     #[test]
     fn transfer_kitty_should_work() {
         with_externalities(&mut build_ext(), || {
